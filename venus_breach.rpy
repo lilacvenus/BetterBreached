@@ -117,20 +117,6 @@ label venus_BB:
 
     stop music fadeout 1.0
 
-    play sound "fx/woosh4.ogg"
-
-    show eyesseb at Pan ((500, 0), (0, 0), 0.7)
-    show roundb1 at Pan ((-500, 0), (0, 0), 0.7)
-
-    with dissolvemed
-
-    $ renpy.pause (2.0)
-
-    hide eyesseb
-    hide roundb1
-    with dissolvemed
-
-
     $ mcpoints = 0
     $ sebpoints = 0
     $ pointsthisround = 1
@@ -153,11 +139,40 @@ label venus_BB:
         {"image": "ad", "hovered": "se/sounds/select.ogg", "clicked": "se/sounds/select3.ogg", "value": "a", "xpos": 1800}
     ]
 
+    $ currentRound = 0
+
     python:
         def displayCards():
             for card in cards:
                 if eval("d" + card['value'] + "unplayed"):
                     renpy.ui.imagebutton("pc/" + card['image'] + ".png", "pc/" + card['image'] + "h.png", clicked=[ui.returns(card['value']), Play("audio", card['clicked'])], xpos=card['xpos'], xanchor="center", ypos=0.95, yanchor=0.4, hovered=Play("audio", card['hovered']))
+
+        def roundOutcome(roundresult):
+            if roundresult == "win":
+                renpy.play("fx/win.ogg")
+
+                renpy.show("pc/win1", Position(xpos=(120 + currentRound * 140), xanchor="center", ypos=743, yanchor=0.5))
+                renpy.show("pc/lose1", Position(xpos=(120 + currentRound * 140), xanchor="center", ypos=337, yanchor=0.5))
+
+                mcpoints += pointsthisround
+                pointsthisround = 1
+
+            elif roundresult == "tie":
+                renpy.play("fx/tie.ogg")
+
+                renpy.show("pc/tie1", Position(xpos=(120 + currentRound * 140), xanchor="center", ypos=743, yanchor=0.5))
+
+                pointsthisround += 1
+
+            else:
+                renpy.play("fx/lose.ogg")
+
+                renpy.show("pc/lose1", Position(xpos=(120 + currentRound * 140), xanchor="center", ypos=743, yanchor=0.5))
+                renpy.show("pc/win1", Position(xpos=(120 + currentRound * 140), xanchor="center", ypos=337, yanchor=0.5))
+
+                sebpoints += pointsthisround
+                pointsthisround = 1
+
 
     $ displayCards()
 
@@ -173,7 +188,6 @@ label venus_BB:
         with dissolve
 
         $ d2unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "3":
@@ -186,7 +200,6 @@ label venus_BB:
         with dissolve
 
         $ d3unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "4":
@@ -199,7 +212,6 @@ label venus_BB:
         with dissolve
 
         $ d4unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "5":
@@ -212,7 +224,6 @@ label venus_BB:
         with dissolve
 
         $ d5unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "6":
@@ -225,7 +236,6 @@ label venus_BB:
         with dissolve
 
         $ d6unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "7":
@@ -238,7 +248,6 @@ label venus_BB:
         with dissolve
 
         $ d7unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "8":
@@ -251,7 +260,6 @@ label venus_BB:
         with dissolve
 
         $ d8unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "9":
@@ -264,7 +272,6 @@ label venus_BB:
         with dissolve
 
         $ d9unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "10":
@@ -277,7 +284,6 @@ label venus_BB:
         with dissolve
 
         $ d10unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "j":
@@ -290,7 +296,6 @@ label venus_BB:
         with dissolve
 
         $ djunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "q":
@@ -316,7 +321,6 @@ label venus_BB:
         with dissolve
 
         $ dkunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "a":
@@ -329,45 +333,9 @@ label venus_BB:
         with dissolve
 
         $ daunplayed = False
-
         $ roundresult = "tie"
 
-    if roundresult == "win":
-        play sound "fx/win.ogg"
-        show win1 at Position (xpos = 120, xanchor = "center", ypos = 743, yanchor = 0.5)
-        show lose1 at Position (xpos = 120, xanchor = "center", ypos = 337, yanchor = 0.5)
-        with dissolve
-
-        $ mcpoints += pointsthisround
-        $ pointsthisround = 1
-
-    elif roundresult == "tie":
-        play sound "fx/tie.ogg"
-        show tie1 at Position (xpos = 120, xanchor = "center", ypos = 540, yanchor = 0.5) with dissolve
-
-        $ pointsthisround += 1
-
-    else:
-        play sound "fx/lose.ogg"
-        show lose1 at Position (xpos = 120, xanchor = "center", ypos = 743, yanchor = 0.5)
-        show win1 at Position (xpos = 120, xanchor = "center", ypos = 337, yanchor = 0.5)
-        with dissolve
-
-        $ sebpoints += pointsthisround
-        $ pointsthisround = 1
-
-    play sound "fx/woosh4.ogg"
-
-    show eyesseb at Pan ((500, 0), (0, 0), 0.7)
-    show roundb2 at Pan ((-500, 0), (0, 0), 0.7)
-
-    with dissolvemed
-
-    $ renpy.pause (0.5)
-
-    hide eyesseb
-    hide roundb2
-    with dissolvemed
+    $ roundOutcome(roundresult)
 
     $ displayCards()
 
@@ -383,7 +351,6 @@ label venus_BB:
         with dissolve
 
         $ d2unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "3":
@@ -396,7 +363,6 @@ label venus_BB:
         with dissolve
 
         $ d3unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "4":
@@ -409,7 +375,6 @@ label venus_BB:
         with dissolve
 
         $ d4unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "5":
@@ -422,7 +387,6 @@ label venus_BB:
         with dissolve
 
         $ d5unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "6":
@@ -435,7 +399,6 @@ label venus_BB:
         with dissolve
 
         $ d6unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "7":
@@ -448,7 +411,6 @@ label venus_BB:
         with dissolve
 
         $ d7unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "8":
@@ -461,7 +423,6 @@ label venus_BB:
         with dissolve
 
         $ d8unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "9":
@@ -474,7 +435,6 @@ label venus_BB:
         with dissolve
 
         $ d9unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "10":
@@ -487,7 +447,6 @@ label venus_BB:
         with dissolve
 
         $ d10unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "j":
@@ -500,7 +459,6 @@ label venus_BB:
         with dissolve
 
         $ djunplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "q":
@@ -513,7 +471,6 @@ label venus_BB:
         with dissolve
 
         $ dqunplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "k":
@@ -526,7 +483,6 @@ label venus_BB:
         with dissolve
 
         $ dkunplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "a":
@@ -539,7 +495,6 @@ label venus_BB:
         with dissolve
 
         $ daunplayed = False
-
         $ roundresult = "ace"
 
     if roundresult == "tie":
@@ -553,19 +508,6 @@ label venus_BB:
         show tie2 at Position (xpos = 260, xanchor = "center", ypos = 540, yanchor = 0.5) with dissolve
 
         $ pointsthisround += 1
-
-    play sound "fx/woosh4.ogg"
-
-    show eyesseb at Pan ((500, 0), (0, 0), 0.7)
-    show roundb3 at Pan ((-500, 0), (0, 0), 0.7)
-
-    with dissolvemed
-
-    $ renpy.pause (0.5)
-
-    hide eyesseb
-    hide roundb3
-    with dissolvemed
 
     $ displayCards()
 
@@ -759,7 +701,6 @@ label venus_BB:
 
     else:
 
-
         play sound "fx/lose.ogg"
         show lose3 at Position (xpos = 400, xanchor = "center", ypos = 743, yanchor = 0.5)
         show win3 at Position (xpos = 400, xanchor = "center", ypos = 337, yanchor = 0.5)
@@ -767,19 +708,6 @@ label venus_BB:
 
         $ sebpoints += pointsthisround
         $ pointsthisround = 1
-
-    play sound "fx/woosh4.ogg"
-
-    show eyesseb at Pan ((500, 0), (0, 0), 0.7)
-    show roundb4 at Pan ((-500, 0), (0, 0), 0.7)
-
-    with dissolvemed
-
-    $ renpy.pause (0.5)
-
-    hide eyesseb
-    hide roundb4
-    with dissolvemed
 
     $ displayCards()
 
@@ -795,7 +723,6 @@ label venus_BB:
         with dissolve
 
         $ d2unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "3":
@@ -808,7 +735,6 @@ label venus_BB:
         with dissolve
 
         $ d3unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "4":
@@ -821,7 +747,6 @@ label venus_BB:
         with dissolve
 
         $ d4unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "5":
@@ -834,7 +759,6 @@ label venus_BB:
         with dissolve
 
         $ d5unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "6":
@@ -847,7 +771,6 @@ label venus_BB:
         with dissolve
 
         $ d6unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "7":
@@ -860,7 +783,6 @@ label venus_BB:
         with dissolve
 
         $ d7unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "8":
@@ -873,7 +795,6 @@ label venus_BB:
         with dissolve
 
         $ d8unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "9":
@@ -886,7 +807,6 @@ label venus_BB:
         with dissolve
 
         $ d9unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "10":
@@ -899,7 +819,6 @@ label venus_BB:
         with dissolve
 
         $ d10unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "j":
@@ -912,7 +831,6 @@ label venus_BB:
         with dissolve
 
         $ djunplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "q":
@@ -925,7 +843,6 @@ label venus_BB:
         with dissolve
 
         $ dqunplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "k":
@@ -938,7 +855,6 @@ label venus_BB:
         with dissolve
 
         $ dkunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "a":
@@ -951,7 +867,6 @@ label venus_BB:
         with dissolve
 
         $ daunplayed = False
-
         $ roundresult = "tie"
 
     if roundresult == "win":
@@ -971,6 +886,7 @@ label venus_BB:
         show tie4 at Position (xpos = 540, xanchor = "center", ypos = 540, yanchor = 0.5) with dissolve
 
         $ pointsthisround += 1
+
     else:
 
         play sound "fx/lose.ogg"
@@ -980,19 +896,6 @@ label venus_BB:
 
         $ sebpoints += pointsthisround
         $ pointsthisround = 1
-
-    play sound "fx/woosh4.ogg"
-
-    show eyesseb at Pan ((500, 0), (0, 0), 0.7)
-    show roundb5 at Pan ((-500, 0), (0, 0), 0.7)
-
-    with dissolvemed
-
-    $ renpy.pause (0.5)
-
-    hide eyesseb
-    hide roundb5
-    with dissolvemed
 
     $ displayCards()
 
@@ -1008,7 +911,6 @@ label venus_BB:
         with dissolve
 
         $ d2unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "3":
@@ -1021,7 +923,6 @@ label venus_BB:
         with dissolve
 
         $ d3unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "4":
@@ -1034,7 +935,6 @@ label venus_BB:
         with dissolve
 
         $ d4unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "5":
@@ -1047,7 +947,6 @@ label venus_BB:
         with dissolve
 
         $ d5unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "6":
@@ -1060,7 +959,6 @@ label venus_BB:
         with dissolve
 
         $ d6unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "7":
@@ -1073,7 +971,6 @@ label venus_BB:
         with dissolve
 
         $ d7unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "8":
@@ -1086,7 +983,6 @@ label venus_BB:
         with dissolve
 
         $ d8unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "9":
@@ -1099,7 +995,6 @@ label venus_BB:
         with dissolve
 
         $ d9unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "10":
@@ -1112,7 +1007,6 @@ label venus_BB:
         with dissolve
 
         $ d10unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "j":
@@ -1125,7 +1019,6 @@ label venus_BB:
         with dissolve
 
         $ djunplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "q":
@@ -1138,7 +1031,6 @@ label venus_BB:
         with dissolve
 
         $ dqunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "k":
@@ -1151,7 +1043,6 @@ label venus_BB:
         with dissolve
 
         $ dkunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "a":
@@ -1164,7 +1055,6 @@ label venus_BB:
         with dissolve
 
         $ daunplayed = False
-
         $ roundresult = "tie"
 
     if roundresult == "win":
@@ -1186,7 +1076,6 @@ label venus_BB:
 
     else:
 
-
         play sound "fx/lose.ogg"
         show lose5 at Position (xpos = 680, xanchor = "center", ypos = 743, yanchor = 0.5)
         show win5 at Position (xpos = 680, xanchor = "center", ypos = 337, yanchor = 0.5)
@@ -1194,20 +1083,6 @@ label venus_BB:
 
         $ sebpoints += pointsthisround
         $ pointsthisround = 1
-
-
-    play sound "fx/woosh4.ogg"
-
-    show eyesseb at Pan ((500, 0), (0, 0), 0.7)
-    show roundb6 at Pan ((-500, 0), (0, 0), 0.7)
-
-    with dissolvemed
-
-    $ renpy.pause (0.5)
-
-    hide eyesseb
-    hide roundb6
-    with dissolvemed
 
     $ displayCards()
 
@@ -1223,7 +1098,6 @@ label venus_BB:
         with dissolve
 
         $ d2unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "3":
@@ -1236,7 +1110,6 @@ label venus_BB:
         with dissolve
 
         $ d3unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "4":
@@ -1249,7 +1122,6 @@ label venus_BB:
         with dissolve
 
         $ d4unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "5":
@@ -1262,7 +1134,6 @@ label venus_BB:
         with dissolve
 
         $ d5unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "6":
@@ -1275,7 +1146,6 @@ label venus_BB:
         with dissolve
 
         $ d6unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "7":
@@ -1288,7 +1158,6 @@ label venus_BB:
         with dissolve
 
         $ d7unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "8":
@@ -1301,7 +1170,6 @@ label venus_BB:
         with dissolve
 
         $ d8unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "9":
@@ -1314,7 +1182,6 @@ label venus_BB:
         with dissolve
 
         $ d9unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "10":
@@ -1327,7 +1194,6 @@ label venus_BB:
         with dissolve
 
         $ d10unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "j":
@@ -1340,7 +1206,6 @@ label venus_BB:
         with dissolve
 
         $ djunplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "q":
@@ -1353,7 +1218,6 @@ label venus_BB:
         with dissolve
 
         $ dqunplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "k":
@@ -1366,7 +1230,6 @@ label venus_BB:
         with dissolve
 
         $ dkunplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "a":
@@ -1379,7 +1242,6 @@ label venus_BB:
         with dissolve
 
         $ daunplayed = False
-
         $ roundresult = "tie"
 
 
@@ -1410,20 +1272,6 @@ label venus_BB:
         $ sebpoints += pointsthisround
         $ pointsthisround = 1
 
-
-    play sound "fx/woosh4.ogg"
-
-    show eyesseb at Pan ((500, 0), (0, 0), 0.7)
-    show roundb7 at Pan ((-500, 0), (0, 0), 0.7)
-
-    with dissolvemed
-
-    $ renpy.pause (0.5)
-
-    hide eyesseb
-    hide roundb7
-    with dissolvemed
-
     $ displayCards()
 
     $ userSelection = ui.interact()
@@ -1438,7 +1286,6 @@ label venus_BB:
         with dissolve
 
         $ d2unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "3":
@@ -1451,7 +1298,6 @@ label venus_BB:
         with dissolve
 
         $ d3unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "4":
@@ -1464,7 +1310,6 @@ label venus_BB:
         with dissolve
 
         $ d4unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "5":
@@ -1477,7 +1322,6 @@ label venus_BB:
         with dissolve
 
         $ d5unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "6":
@@ -1490,7 +1334,6 @@ label venus_BB:
         with dissolve
 
         $ d6unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "7":
@@ -1503,7 +1346,6 @@ label venus_BB:
         with dissolve
 
         $ d7unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "8":
@@ -1516,7 +1358,6 @@ label venus_BB:
         with dissolve
 
         $ d8unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "9":
@@ -1529,7 +1370,6 @@ label venus_BB:
         with dissolve
 
         $ d9unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "10":
@@ -1542,7 +1382,6 @@ label venus_BB:
         with dissolve
 
         $ d10unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "j":
@@ -1555,7 +1394,6 @@ label venus_BB:
         with dissolve
 
         $ djunplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "q":
@@ -1568,7 +1406,6 @@ label venus_BB:
         with dissolve
 
         $ dqunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "k":
@@ -1581,7 +1418,6 @@ label venus_BB:
         with dissolve
 
         $ dkunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "a":
@@ -1594,7 +1430,6 @@ label venus_BB:
         with dissolve
 
         $ daunplayed = False
-
         $ roundresult = "tie"
 
     if roundresult == "win":
@@ -1614,9 +1449,8 @@ label venus_BB:
         show tie7 at Position (xpos = 960, xanchor = "center", ypos = 540, yanchor = 0.5) with dissolve
 
         $ pointsthisround += 1
+
     else:
-
-
 
         play sound "fx/lose.ogg"
         show lose7 at Position (xpos = 960, xanchor = "center", ypos = 743, yanchor = 0.5)
@@ -1625,19 +1459,6 @@ label venus_BB:
 
         $ sebpoints += pointsthisround
         $ pointsthisround = 1
-
-    play sound "fx/woosh4.ogg"
-
-    show eyesseb at Pan ((500, 0), (0, 0), 0.7)
-    show roundb8 at Pan ((-500, 0), (0, 0), 0.7)
-
-    with dissolvemed
-
-    $ renpy.pause (0.5)
-
-    hide eyesseb
-    hide roundb8
-    with dissolvemed
 
     $ displayCards()
 
@@ -1653,7 +1474,6 @@ label venus_BB:
         with dissolve
 
         $ d2unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "3":
@@ -1666,7 +1486,6 @@ label venus_BB:
         with dissolve
 
         $ d3unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "4":
@@ -1679,7 +1498,6 @@ label venus_BB:
         with dissolve
 
         $ d4unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "5":
@@ -1692,7 +1510,6 @@ label venus_BB:
         with dissolve
 
         $ d5unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "6":
@@ -1705,7 +1522,6 @@ label venus_BB:
         with dissolve
 
         $ d6unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "7":
@@ -1718,7 +1534,6 @@ label venus_BB:
         with dissolve
 
         $ d7unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "8":
@@ -1731,7 +1546,6 @@ label venus_BB:
         with dissolve
 
         $ d8unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "9":
@@ -1744,7 +1558,6 @@ label venus_BB:
         with dissolve
 
         $ d9unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "10":
@@ -1757,7 +1570,6 @@ label venus_BB:
         with dissolve
 
         $ d10unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "j":
@@ -1770,7 +1582,6 @@ label venus_BB:
         with dissolve
 
         $ djunplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "q":
@@ -1783,7 +1594,6 @@ label venus_BB:
         with dissolve
 
         $ dqunplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "k":
@@ -1796,7 +1606,6 @@ label venus_BB:
         with dissolve
 
         $ dkunplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "a":
@@ -1809,7 +1618,6 @@ label venus_BB:
         with dissolve
 
         $ daunplayed = False
-
         $ roundresult = "tie"
 
     if roundresult == "win":
@@ -1821,7 +1629,6 @@ label venus_BB:
 
         $ mcpoints += pointsthisround
         $ pointsthisround = 1
-
 
     elif roundresult == "tie":
 
@@ -1840,19 +1647,6 @@ label venus_BB:
         $ sebpoints += pointsthisround
         $ pointsthisround = 1
 
-    play sound "fx/woosh4.ogg"
-
-    show eyesseb at Pan ((500, 0), (0, 0), 0.7)
-    show roundb9 at Pan ((-500, 0), (0, 0), 0.7)
-
-    with dissolvemed
-
-    $ renpy.pause (0.5)
-
-    hide eyesseb
-    hide roundb9
-    with dissolvemed
-
     $ displayCards()
 
     $ userSelection = ui.interact()
@@ -1867,7 +1661,6 @@ label venus_BB:
         with dissolve
 
         $ d2unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "3":
@@ -1880,7 +1673,6 @@ label venus_BB:
         with dissolve
 
         $ d3unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "4":
@@ -1893,7 +1685,6 @@ label venus_BB:
         with dissolve
 
         $ d4unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "5":
@@ -1906,7 +1697,6 @@ label venus_BB:
         with dissolve
 
         $ d5unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "6":
@@ -1919,7 +1709,6 @@ label venus_BB:
         with dissolve
 
         $ d6unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "7":
@@ -1932,7 +1721,6 @@ label venus_BB:
         with dissolve
 
         $ d7unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "8":
@@ -1945,7 +1733,6 @@ label venus_BB:
         with dissolve
 
         $ d8unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "9":
@@ -1958,7 +1745,6 @@ label venus_BB:
         with dissolve
 
         $ d9unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "10":
@@ -1971,7 +1757,6 @@ label venus_BB:
         with dissolve
 
         $ d10unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "j":
@@ -1984,7 +1769,6 @@ label venus_BB:
         with dissolve
 
         $ djunplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "q":
@@ -1997,7 +1781,6 @@ label venus_BB:
         with dissolve
 
         $ dqunplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "k":
@@ -2010,7 +1793,6 @@ label venus_BB:
         with dissolve
 
         $ dkunplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "a":
@@ -2023,11 +1805,7 @@ label venus_BB:
         with dissolve
 
         $ daunplayed = False
-
         $ roundresult = "tie"
-
-
-
 
     if roundresult == "win":
 
@@ -2039,8 +1817,6 @@ label venus_BB:
         $ mcpoints += pointsthisround
         $ pointsthisround = 1
 
-        Sb "Oh, well..."
-
     elif roundresult == "tie":
 
         play sound "fx/tie.ogg"
@@ -2048,9 +1824,7 @@ label venus_BB:
 
         $ pointsthisround += 1
 
-        Sb "Oh my..."
     else:
-
 
         play sound "fx/lose.ogg"
         show lose9 at Position (xpos = 1240, xanchor = "center", ypos = 743, yanchor = 0.5)
@@ -2059,21 +1833,6 @@ label venus_BB:
 
         $ sebpoints += pointsthisround
         $ pointsthisround = 1
-
-        Sb "Yee-haw."
-
-    play sound "fx/woosh4.ogg"
-
-    show eyesseb at Pan ((500, 0), (0, 0), 0.7)
-    show roundb10 at Pan ((-500, 0), (0, 0), 0.7)
-
-    with dissolvemed
-
-    $ renpy.pause (0.5)
-
-    hide eyesseb
-    hide roundb10
-    with dissolvemed
 
     $ displayCards()
 
@@ -2089,7 +1848,6 @@ label venus_BB:
         with dissolve
 
         $ d2unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "3":
@@ -2102,7 +1860,6 @@ label venus_BB:
         with dissolve
 
         $ d3unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "4":
@@ -2115,7 +1872,6 @@ label venus_BB:
         with dissolve
 
         $ d4unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "5":
@@ -2128,7 +1884,6 @@ label venus_BB:
         with dissolve
 
         $ d5unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "6":
@@ -2141,7 +1896,6 @@ label venus_BB:
         with dissolve
 
         $ d6unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "7":
@@ -2154,7 +1908,6 @@ label venus_BB:
         with dissolve
 
         $ d7unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "8":
@@ -2167,7 +1920,6 @@ label venus_BB:
         with dissolve
 
         $ d8unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "9":
@@ -2180,7 +1932,6 @@ label venus_BB:
         with dissolve
 
         $ d9unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "10":
@@ -2193,7 +1944,6 @@ label venus_BB:
         with dissolve
 
         $ d10unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "j":
@@ -2206,7 +1956,6 @@ label venus_BB:
         with dissolve
 
         $ djunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "q":
@@ -2219,7 +1968,6 @@ label venus_BB:
         with dissolve
 
         $ dqunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "k":
@@ -2232,7 +1980,6 @@ label venus_BB:
         with dissolve
 
         $ dkunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "a":
@@ -2245,7 +1992,6 @@ label venus_BB:
         with dissolve
 
         $ daunplayed = False
-
         $ roundresult = "lose"
 
     if roundresult == "win":
@@ -2267,7 +2013,6 @@ label venus_BB:
 
     else:
 
-
         play sound "fx/lose.ogg"
         show lose10 at Position (xpos = 1380, xanchor = "center", ypos = 743, yanchor = 0.5)
         show win10 at Position (xpos = 1380, xanchor = "center", ypos = 337, yanchor = 0.5)
@@ -2275,20 +2020,6 @@ label venus_BB:
 
         $ sebpoints += pointsthisround
         $ pointsthisround = 1
-
-
-    play sound "fx/woosh4.ogg"
-
-    show eyesseb at Pan ((500, 0), (0, 0), 0.7)
-    show roundb11 at Pan ((-500, 0), (0, 0), 0.7)
-
-    with dissolvemed
-
-    $ renpy.pause (0.5)
-
-    hide eyesseb
-    hide roundb11
-    with dissolvemed
 
     $ displayCards()
 
@@ -2304,7 +2035,6 @@ label venus_BB:
         with dissolve
 
         $ d2unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "3":
@@ -2317,7 +2047,6 @@ label venus_BB:
         with dissolve
 
         $ d3unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "4":
@@ -2330,7 +2059,6 @@ label venus_BB:
         with dissolve
 
         $ d4unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "5":
@@ -2343,7 +2071,6 @@ label venus_BB:
         with dissolve
 
         $ d5unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "6":
@@ -2356,7 +2083,6 @@ label venus_BB:
         with dissolve
 
         $ d6unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "7":
@@ -2369,7 +2095,6 @@ label venus_BB:
         with dissolve
 
         $ d7unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "8":
@@ -2382,7 +2107,6 @@ label venus_BB:
         with dissolve
 
         $ d8unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "9":
@@ -2395,7 +2119,6 @@ label venus_BB:
         with dissolve
 
         $ d9unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "10":
@@ -2408,7 +2131,6 @@ label venus_BB:
         with dissolve
 
         $ d10unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "j":
@@ -2421,7 +2143,6 @@ label venus_BB:
         with dissolve
 
         $ djunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "q":
@@ -2434,7 +2155,6 @@ label venus_BB:
         with dissolve
 
         $ dqunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "k":
@@ -2447,7 +2167,6 @@ label venus_BB:
         with dissolve
 
         $ dkunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "a":
@@ -2460,9 +2179,7 @@ label venus_BB:
         with dissolve
 
         $ daunplayed = False
-
         $ roundresult = "lose"
-
 
     if roundresult == "win":
 
@@ -2474,16 +2191,14 @@ label venus_BB:
         $ mcpoints += pointsthisround
         $ pointsthisround = 1
 
-
     elif roundresult == "tie":
 
         play sound "fx/tie.ogg"
         show tie11 at Position (xpos = 1520, xanchor = "center", ypos = 540, yanchor = 0.5) with dissolve
 
         $ pointsthisround += 1
+
     else:
-
-
 
         play sound "fx/lose.ogg"
         show lose11 at Position (xpos = 1520, xanchor = "center", ypos = 743, yanchor = 0.5)
@@ -2492,20 +2207,6 @@ label venus_BB:
 
         $ sebpoints += pointsthisround
         $ pointsthisround = 1
-
-
-    play sound "fx/woosh4.ogg"
-
-    show eyesseb at Pan ((500, 0), (0, 0), 0.7)
-    show roundb12 at Pan ((-500, 0), (0, 0), 0.7)
-
-    with dissolvemed
-
-    $ renpy.pause (0.5)
-
-    hide eyesseb
-    hide roundb12
-    with dissolvemed
 
     $ displayCards()
 
@@ -2521,7 +2222,6 @@ label venus_BB:
         with dissolve
 
         $ d2unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "3":
@@ -2534,7 +2234,6 @@ label venus_BB:
         with dissolve
 
         $ d3unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "4":
@@ -2547,7 +2246,6 @@ label venus_BB:
         with dissolve
 
         $ d4unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "5":
@@ -2560,7 +2258,6 @@ label venus_BB:
         with dissolve
 
         $ d5unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "6":
@@ -2573,7 +2270,6 @@ label venus_BB:
         with dissolve
 
         $ d6unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "7":
@@ -2586,7 +2282,6 @@ label venus_BB:
         with dissolve
 
         $ d7unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "8":
@@ -2599,7 +2294,6 @@ label venus_BB:
         with dissolve
 
         $ d8unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "9":
@@ -2612,7 +2306,6 @@ label venus_BB:
         with dissolve
 
         $ d9unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "10":
@@ -2625,7 +2318,6 @@ label venus_BB:
         with dissolve
 
         $ d10unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "j":
@@ -2638,7 +2330,6 @@ label venus_BB:
         with dissolve
 
         $ djunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "q":
@@ -2664,7 +2355,6 @@ label venus_BB:
         with dissolve
 
         $ dkunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "a":
@@ -2677,7 +2367,6 @@ label venus_BB:
         with dissolve
 
         $ daunplayed = False
-
         $ roundresult = "tie"
 
     if roundresult == "win":
@@ -2690,16 +2379,14 @@ label venus_BB:
         $ mcpoints += pointsthisround
         $ pointsthisround = 1
 
-
     elif roundresult == "tie":
 
         play sound "fx/tie.ogg"
         show tie12 at Position (xpos = 1660, xanchor = "center", ypos = 540, yanchor = 0.5) with dissolve
 
         $ pointsthisround += 1
+
     else:
-
-
 
         play sound "fx/lose.ogg"
         show lose12 at Position (xpos = 1660, xanchor = "center", ypos = 743, yanchor = 0.5)
@@ -2710,21 +2397,6 @@ label venus_BB:
         $ pointsthisround = 1
 
     $ renpy.pause (0.5)
-
-
-
-    play sound "fx/woosh4.ogg"
-
-    show eyesseb at Pan ((500, 0), (0, 0), 0.7)
-    show roundb13 at Pan ((-500, 0), (0, 0), 0.7)
-
-    with dissolvemed
-
-    $ renpy.pause (0.5)
-
-    hide eyesseb
-    hide roundb13
-    with dissolvemed
 
     $ displayCards()
 
@@ -2740,7 +2412,6 @@ label venus_BB:
         with dissolve
 
         $ d2unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "3":
@@ -2753,7 +2424,6 @@ label venus_BB:
         with dissolve
 
         $ d3unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "4":
@@ -2766,7 +2436,6 @@ label venus_BB:
         with dissolve
 
         $ d4unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "5":
@@ -2779,7 +2448,6 @@ label venus_BB:
         with dissolve
 
         $ d5unplayed = False
-
         $ roundresult = "lose"
 
     if userSelection == "6":
@@ -2792,7 +2460,6 @@ label venus_BB:
         with dissolve
 
         $ d6unplayed = False
-
         $ roundresult = "tie"
 
     if userSelection == "7":
@@ -2805,7 +2472,6 @@ label venus_BB:
         with dissolve
 
         $ d7unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "8":
@@ -2818,7 +2484,6 @@ label venus_BB:
         with dissolve
 
         $ d8unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "9":
@@ -2831,7 +2496,6 @@ label venus_BB:
         with dissolve
 
         $ d9unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "10":
@@ -2844,7 +2508,6 @@ label venus_BB:
         with dissolve
 
         $ d10unplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "j":
@@ -2857,7 +2520,6 @@ label venus_BB:
         with dissolve
 
         $ djunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "q":
@@ -2870,7 +2532,6 @@ label venus_BB:
         with dissolve
 
         $ dqunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "k":
@@ -2883,7 +2544,6 @@ label venus_BB:
         with dissolve
 
         $ dkunplayed = False
-
         $ roundresult = "win"
 
     if userSelection == "a":
@@ -2896,11 +2556,7 @@ label venus_BB:
         with dissolve
 
         $ daunplayed = False
-
         $ roundresult = "lose"
-
-
-
 
     if roundresult == "win":
 
@@ -2912,16 +2568,14 @@ label venus_BB:
         $ mcpoints += pointsthisround
         $ pointsthisround = 1
 
-
     elif roundresult == "tie":
 
         play sound "fx/tie.ogg"
         show tie13 at Position (xpos = 1800, xanchor = "center", ypos = 540, yanchor = 0.5) with dissolve
 
         $ pointsthisround += 1
+
     else:
-
-
 
         play sound "fx/lose.ogg"
         show lose13 at Position (xpos = 1800, xanchor = "center", ypos = 743, yanchor = 0.5)
